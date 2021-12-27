@@ -1,0 +1,20 @@
+.slot{
+    width: 30px;
+    height: 30px;
+    font-size: large;
+    float: left;
+    margin-left: 1%;
+    margin-top: 1%;
+}
+
+.grid{
+    width: 340px;
+    height: 340px;
+    margin-left: 39%;
+    margin-top: 3%;
+}
+
+.clues{
+    margin-top: 3%;
+    margin-left: 30%;
+}
