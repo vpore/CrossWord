@@ -1,6 +1,8 @@
 import "../Assets/Grid.css";
 const Grid = (props) => {
 
+  let grid = Array.from(Array(10), () => new Array(10));
+  const emptySlot = '_';
   let grids = [];
   let wordSet = [];
   let clueSet = [];
@@ -11,15 +13,157 @@ const Grid = (props) => {
   let index = [];
   let word = {text: '', row: 0, column: 0, vertical: true};
 
-  const getSpecWord = () => {
+  for(let row=0; row<10; row++){
+    for(let column=0; column<10; column++){
+      grid[row][column]=emptySlot;
+    }
+  }
+
+  const getSpecWord = () => { //get word of a particular length
     let specWords = wordSet.filter((eachWord) => eachWord.length>=6);
     return specWords[Math.floor(Math.random() * specWords.length)];
   };
 
-  const pushUsedWords = (text) => {
+  const pushUsedWords = (text) => { //add the used words into usedWords array
     usedWords.push(text);
     text.split("").filter((eachLetter) => firstLetters.push(eachLetter));
     console.log(firstLetters);
+  };
+
+  const isValidPos = (row, column) => { //checks if the row/column is b/w 0 n 9
+    return row >= 0 && row < 10 && column >= 0 && column < 10;
+  };
+
+  const fitsOnGrid = () => { //checks if the length of a word doesnt exceed the last row/column
+    if(word.vertical){
+      return word.row + word.text.length <= 10;
+    }
+    else{
+      return word.column + word.text.length <= 10;
+    }
+  };
+
+  const isLetter = (row, column) => { //checks if the slot is filled
+    return grid[row][column] !== emptySlot;
+  };
+
+  const isEmptySlot = (row, column) => { //checks if the slot is empty
+    return !isLetter(row, column);
+  };
+
+  const isGettingBlocked = (row, column, nextRow, nextColumn) => {
+    return (
+      isValidPos(row, column) &&
+      isValidPos(nextRow, nextColumn) &&
+      isLetter(row, column) &&
+      isLetter(nextRow, nextColumn)
+    );
+  };
+
+  const isSlotFilled = (row, column) => {
+    return isValidPos(row, column) && isLetter(row, column);
+  };
+
+  const lastWord = (row, column) => {
+    if(word.vertical){
+      return word.row + word.text.length - 1 === row;
+    }
+    else{
+      return word.column + word.text.length -1 === column;
+    }
+  };
+
+  const isReplacingSlot = (row, column) => {
+    let replacing = false;
+    let empty = isEmptySlot(row, column);
+    let isAdjacentSlotFilled;
+    if(word.vertical){
+      isAdjacentSlotFilled =
+        isSlotFilled(row, column - 1) ||
+        isSlotFilled(row, column + 1) ||
+        (lastWord(row, column) && isSlotFilled(row + 1, column));
+      
+        replacing = empty && isAdjacentSlotFilled;
+    }
+    else{
+      isAdjacentSlotFilled =
+        isSlotFilled(row - 1, column) ||
+        isSlotFilled(row + 1, column) ||
+        (lastWord(row, column) && isSlotFilled(row, column + 1));
+
+      replacing = empty && isAdjacentSlotFilled;
+    }
+
+    return replacing;
+  };
+
+  const isReplacingHorizontalWord = (row, column) => {
+    let columnLeft = column-1;
+    return isValidPos(row, columnLeft) && isLetter(row, column) && isLetter(row, columnLeft);
+  };
+
+  const isReplacingVerticalWord = (row, column) => {
+    let rowAbove = row-1;
+    return isValidPos(rowAbove, column) && isLetter(row, column) && isLetter(rowAbove, column);
+  };
+
+  const isAptPlacement = (row, column) => { //checks if the word can be placed w/o getting blocked
+    let apt = false;
+    if(word.vertical){
+      apt =
+        isGettingBlocked(row, column + 1, row + 1, column) ||
+        isGettingBlocked(row, column - 1, row + 1, column) ||
+        isReplacingVerticalWord(row, column) ||
+        isReplacingSlot(row, column);
+    }
+    else{
+      apt =
+        isGettingBlocked(row + 1, column, row, column + 1) ||
+        isGettingBlocked(row - 1, column, row, column + 1) ||
+        isReplacingHorizontalWord(row, column) ||
+        isReplacingSlot(row, column);
+    }
+    return !apt;
+  };
+
+  const canBePlaced = () => { //determines if a word can be placed or not
+    let placed = true;
+    if(isValidPos(word.row, word.column) && fitsOnGrid()){
+      let index = 0;
+      while(index < word.text.length){
+        let currentRow = word.vertical ? word.row+index : word.row;
+        let currentColumn = word.vertical ? word.column : word.column+index;
+
+        if(
+          word.text.charAt(index) === grid[currentRow][currentColumn] ||
+          emptySlot === grid[currentRow][currentColumn] &&
+          isAptPlacement(currentRow, currentColumn)
+        ){
+          //Word can be placed
+        }
+        else{
+          placed = false;
+        }
+        index++;
+      }
+    }
+    else{
+      placed = false;
+    }
+    return placed;
+  };
+
+  const addWord = () => {
+    
+  };
+
+  const updateGrid = () => { //updates the grid array if a word is eligible
+    let update = false;
+    if(canBePlaced()){
+      addWord();
+      update = true;
+    }
+    return update;
   };
 
   const generateGrids = () => {
@@ -30,6 +174,7 @@ const Grid = (props) => {
       word.column = 0;
       word.vertical = false;
       
+      updateGrid();
       pushUsedWords(word.text);
     }
   };
@@ -68,7 +213,7 @@ const Grid = (props) => {
     word.vertical = Math.random()>=0.5;
   };
 
-  const getWord = () => {
+  const getWord = () => { 
     let word = getRandomWord();
 
     while(!hasStartingLetter(word)){
