@@ -135,9 +135,9 @@ const Grid = (props) => {
         let currentColumn = word.vertical ? word.column : word.column+index;
 
         if(
-          word.text.charAt(index) === grid[currentRow][currentColumn] ||
-          emptySlot === grid[currentRow][currentColumn] &&
-          isAptPlacement(currentRow, currentColumn)
+          (word.text.charAt(index) === grid[currentRow][currentColumn]) ||
+          (emptySlot === grid[currentRow][currentColumn] &&
+          isAptPlacement(currentRow, currentColumn))
         ){
           //Word can be placed
         }
@@ -154,7 +154,18 @@ const Grid = (props) => {
   };
 
   const addWord = () => {
-    
+    for(let index = 0; index < word.text.length; index++){
+      let row = word.row;
+      let column = word.column;
+      if(word.vertical){
+        row += index;
+      }
+      else{
+        column += index;
+      }
+      grid[row][column] = word.text.substring(index, index+1);
+    }
+    console.log(grid);
   };
 
   const updateGrid = () => { //updates the grid array if a word is eligible
@@ -164,6 +175,49 @@ const Grid = (props) => {
       update = true;
     }
     return update;
+  };
+
+  const attemptToPlaceWord = () => {
+    let text = getWord();
+    for(let row = 0; row<10; row++){
+      for(let column = 0; column<10; column++){
+        word.text=text;
+        word.row=row;
+        word.column=column;
+        word.vertical=Math.random()>=0.5;
+
+        if(isLetter(row, column)){
+          if(updateGrid()){
+            pushUsedWords(word.text);
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  };
+
+  const getIntersections = () => {
+    let intersection = 0;
+    for(let row=0; row<10; row++){
+      for(let column=0; column<10; column++){
+        if(isLetter(row, column)){
+          if(
+            isValidPos(row-1, column) &&
+            isValidPos(row+1, column) &&
+            isValidPos(row, column-1) &&
+            isValidPos(row, column+1) &&
+            isLetter(row-1, column) &&
+            isLetter(row+1, column) &&
+            isLetter(row, column-1) &&
+            isLetter(row, column+1)
+          ){
+            ++intersection;
+          }
+        }
+      }
+    }
+    return intersection;
   };
 
   const generateGrids = () => {
@@ -176,7 +230,27 @@ const Grid = (props) => {
       
       updateGrid();
       pushUsedWords(word.text);
+
+      let i = 0;
+      for(let attempt=0; attempt<5000; attempt++){
+        let placed = attemptToPlaceWord();
+        if(placed){
+          i=0;
+        }
+        else{
+          i++;
+        }
+        if(i>470){
+          break;
+        }
+      }
+      grids.push(grid);
+      if(getIntersections() >= 4){
+        break;
+      }
+      usedWords = [];
     }
+    console.log(grids);
   };
 
   const obtainClues = () => {
@@ -208,10 +282,10 @@ const Grid = (props) => {
     displayCrossWord();
   };
 
-  const wordsNClues = () => {
-    word.text = getWord();
-    word.vertical = Math.random()>=0.5;
-  };
+  // const wordsNClues = () => {
+  //   word.text = getWord();
+  //   word.vertical = Math.random()>=0.5;
+  // };
 
   const getWord = () => { 
     let word = getRandomWord();
@@ -226,7 +300,7 @@ const Grid = (props) => {
   const hasStartingLetter = (word) => {
     let startLetter = false;
     for(let letter of firstLetters){
-      if(letter === word.charAt(0)){
+      if(letter == word.charAt(0)){
         startLetter = true;
         break;
       }
@@ -247,6 +321,7 @@ const Grid = (props) => {
     wordSet = props.words;
     clueSet = props.clues;
     generateCrossWord();
+    console.log('hiii');
     //wordsNClues();
   }
 
@@ -272,7 +347,7 @@ const Grid = (props) => {
     return slots;
   };
 
-  let content = reqClues;
+  let content = wordSet;
   
   if(props.error){
     content = <button type="button" className="btn btn-outline-dark mt-4 tryAgnBtn" onClick={props.onFetch}>
