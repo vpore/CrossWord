@@ -1,23 +1,20 @@
 import "../Assets/Grid.css";
 const Grid = (props) => {
 
-  let grid = Array.from(Array(10), () => new Array(10));
+  let grid = [];
   const emptySlot = '_';
   let grids = [];
+  let finalGrid = [];
+  let bestGrid = [];
   let wordSet = [];
   let clueSet = [];
   let reqClues = [];
   let reqWords = [];
   let usedWords = [];
+  let totalUsedWords = [];
   let firstLetters = [];
   let index = [];
   let word = {text: '', row: 0, column: 0, vertical: true};
-
-  for(let row=0; row<10; row++){
-    for(let column=0; column<10; column++){
-      grid[row][column]=emptySlot;
-    }
-  }
 
   const getSpecWord = () => { //get word of a particular length
     let specWords = wordSet.filter((eachWord) => eachWord.length>=6);
@@ -27,7 +24,6 @@ const Grid = (props) => {
   const pushUsedWords = (text) => { //add the used words into usedWords array
     usedWords.push(text);
     text.split("").filter((eachLetter) => firstLetters.push(eachLetter));
-    console.log(firstLetters);
   };
 
   const isValidPos = (row, column) => { //checks if the row/column is b/w 0 n 9
@@ -44,6 +40,11 @@ const Grid = (props) => {
   };
 
   const isLetter = (row, column) => { //checks if the slot is filled
+    return grid[row][column] !== emptySlot;
+  };
+
+  const isSpecLetter = (row, column, index) => {
+    let grid = grids[index];
     return grid[row][column] !== emptySlot;
   };
 
@@ -165,7 +166,6 @@ const Grid = (props) => {
       }
       grid[row][column] = word.text.substring(index, index+1);
     }
-    console.log(grid);
   };
 
   const updateGrid = () => { //updates the grid array if a word is eligible
@@ -197,20 +197,20 @@ const Grid = (props) => {
     return false;
   };
 
-  const getIntersections = () => {
+  const getIntersections = (index) => {
     let intersection = 0;
     for(let row=0; row<10; row++){
       for(let column=0; column<10; column++){
-        if(isLetter(row, column)){
+        if(isSpecLetter(row, column, index)){
           if(
             isValidPos(row-1, column) &&
             isValidPos(row+1, column) &&
             isValidPos(row, column-1) &&
             isValidPos(row, column+1) &&
-            isLetter(row-1, column) &&
-            isLetter(row+1, column) &&
-            isLetter(row, column-1) &&
-            isLetter(row, column+1)
+            isSpecLetter(row-1, column, index) &&
+            isSpecLetter(row+1, column, index) &&
+            isSpecLetter(row, column-1, index) &&
+            isSpecLetter(row, column+1, index)
           ){
             ++intersection;
           }
@@ -219,10 +219,95 @@ const Grid = (props) => {
     }
     return intersection;
   };
+/* 1) how come 11 grids?? 
+   2) cal intersecN and Best Grid
+   3) display clues acc to words in best grid - sort them into accross n down
+   4) create btn to check the entered values 
+   5) function to check the answers
+*/
+
+  const getSubIS = (index) => {
+    let subIS = 0;
+    for(let row=0; row<10; row++){
+      for(let column =0; column<10; column++){
+        if(isSpecLetter(row, column, index)){
+          if(
+            (
+              isValidPos(row+1, column) &&
+              isValidPos(row, column-1) &&
+              isValidPos(row-1, column) &&
+              isSpecLetter(row+1, column, index) &&
+              isSpecLetter(row, column-1, index) &&
+              isSpecLetter(row-1, column, index)
+            ) ||
+            (
+              isValidPos(row, column-1) &&
+              isValidPos(row-1, column) &&
+              isValidPos(row, column+1) &&
+              isSpecLetter(row, column-1, index) &&
+              isSpecLetter(row-1, column, index) &&
+              isSpecLetter(row, column+1, index)
+            ) ||
+            (
+              isValidPos(row-1, column) &&
+              isValidPos(row, column+1) &&
+              isValidPos(row+1, column) &&
+              isSpecLetter(row-1, column, index) &&
+              isSpecLetter(row, column+1, index) &&
+              isSpecLetter(row+1, column, index)
+            ) ||
+            (
+              isValidPos(row, column-1) &&
+              isValidPos(row+1, column) &&
+              isValidPos(row, column+1) &&
+              isSpecLetter(row, column-1, index) &&
+              isSpecLetter(row+1, column, index) &&
+              isSpecLetter(row, column+1, index)
+            )
+          ){
+            ++subIS;
+          }
+        }
+      }
+    }
+    return subIS;
+  };
+
+  const getBestGrid = () => {
+    bestGrid = grids[0];
+    for(let grid of grids){
+      let index = grids.indexOf(grid);
+
+      if(getIntersections(grids.indexOf(bestGrid)) !== 0 || getIntersections(index) !== 0){
+        if(getIntersections(index) >= getIntersections(grids.indexOf(bestGrid))){
+          bestGrid = grid;
+        }
+      }//0 0 0 0 1 0 0 0 1 0 0
+      else{
+        if(getSubIS(index) >= getSubIS(grids.indexOf(bestGrid))){
+          bestGrid = grid;
+        }
+      }
+
+    }
+    
+    return bestGrid;
+  };
+
+  const getUsedWordsArray = (arr) => {
+    totalUsedWords.push(arr);
+  };
 
   const generateGrids = () => {
     grids = [];
-    for(let gridsMade = 0; gridsMade<1; gridsMade++){
+    for(let gridIndex = 0; gridIndex<10; gridIndex++){
+      grids[gridIndex] = Array.from(Array(10), () => new Array(10));
+      grid = grids[gridIndex];
+      for(let row=0; row<10; row++){
+        for(let column=0; column<10; column++){
+          grid[row][column]=emptySlot;
+        }
+      }
       word.text = getSpecWord();
       word.row = 0;
       word.column = 0;
@@ -232,7 +317,7 @@ const Grid = (props) => {
       pushUsedWords(word.text);
 
       let i = 0;
-      for(let attempt=0; attempt<5000; attempt++){
+      for(let attempt=0; attempt<1000; attempt++){
         let placed = attemptToPlaceWord();
         if(placed){
           i=0;
@@ -245,15 +330,17 @@ const Grid = (props) => {
         }
       }
       grids.push(grid);
-      if(getIntersections() >= 4){
+      if(getIntersections(grids.indexOf(grid)) >= 4){
         break;
       }
+      getUsedWordsArray(usedWords);
       usedWords = [];
     }
-    console.log(grids);
   };
 
-  const obtainClues = () => {
+  const obtainClues = () => { //get clues acc. to words used in finalGrid
+    reqWords = totalUsedWords[grids.indexOf(finalGrid)];
+    //console.log(reqWords);
     reqWords.forEach((eachReqWord) =>
       wordSet.forEach((eachWord) => {
         if (eachReqWord === eachWord) {
@@ -276,8 +363,16 @@ const Grid = (props) => {
 
   };
 
-  const generateCrossWord = () => {
+  const generateCrossWord = () => { //Main Function
     generateGrids();
+    finalGrid = getBestGrid();
+    /*console.log(
+      getIntersections(grids.indexOf(finalGrid)) > 0
+        ? getIntersections(grids.indexOf(finalGrid))
+        : getSubIS(grids.indexOf(finalGrid))
+    );*/
+    //console.log(finalGrid);
+    //console.log(totalUsedWords);
     obtainClues();
     displayCrossWord();
   };
@@ -287,7 +382,7 @@ const Grid = (props) => {
   //   word.vertical = Math.random()>=0.5;
   // };
 
-  const getWord = () => { 
+  const getWord = () => { //get word which is random & has its first letter which is same as atleast one letter of the letters of the usedWords
     let word = getRandomWord();
 
     while(!hasStartingLetter(word)){
@@ -297,10 +392,10 @@ const Grid = (props) => {
     return word;
   };
 
-  const hasStartingLetter = (word) => {
+  const hasStartingLetter = (word) => { //
     let startLetter = false;
     for(let letter of firstLetters){
-      if(letter == word.charAt(0)){
+      if(letter === word.charAt(0)){
         startLetter = true;
         break;
       }
@@ -319,9 +414,10 @@ const Grid = (props) => {
 
   if (typeof props.words !== 'undefined') {
     wordSet = props.words;
+    wordSet = wordSet.map(eachWord => eachWord.toUpperCase());
     clueSet = props.clues;
     generateCrossWord();
-    console.log('hiii');
+    //console.log('hiii');
     //wordsNClues();
   }
 
@@ -347,7 +443,7 @@ const Grid = (props) => {
     return slots;
   };
 
-  let content = wordSet;
+  let content = reqClues;
   
   if(props.error){
     content = <button type="button" className="btn btn-outline-dark mt-4 tryAgnBtn" onClick={props.onFetch}>
