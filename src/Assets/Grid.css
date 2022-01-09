@@ -7,6 +7,15 @@
     margin-top: 1%;
 }
 
+.block{
+    width: 30px;
+    height: 30px;
+    float: left;
+    margin-left: 1%;
+    margin-top: 1%;
+    background-color: black;
+}
+
 .grid{
     width: 340px;
     height: 340px;
@@ -20,12 +29,14 @@
 }
 
 .accross{
+    margin-top: 2%;
     margin-left: 10%;
     width: 40%;
     float: left;
 }
 
 .down{
+    margin-top: 2%;
     margin-left: 2%;
     width: 40%;
     float: left;
