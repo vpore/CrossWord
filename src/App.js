@@ -39,9 +39,9 @@ function App() {
     setIsLoading(false);
   };
 
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   if (pairs.length > 0) {
     var words = pairs.map((eachWord) => eachWord.word);

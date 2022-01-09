@@ -8,10 +8,15 @@ const Grid = (props) => {
   let bestGrid = [];
   let wordSet = [];
   let clueSet = [];
-  let reqClues = [];
   let reqWords = [];
+  let reqAlign = [];
+  let reqClues = [];
+  let hClues = [];
+  let vClues = [];
   let usedWords = [];
+  let usedAlign = [];
   let totalUsedWords = [];
+  let totalUsedAlign = [];
   let firstLetters = [];
   let index = [];
   let word = {text: '', row: 0, column: 0, vertical: true};
@@ -21,9 +26,10 @@ const Grid = (props) => {
     return specWords[Math.floor(Math.random() * specWords.length)];
   };
 
-  const pushUsedWords = (text) => { //add the used words into usedWords array
-    usedWords.push(text);
-    text.split("").filter((eachLetter) => firstLetters.push(eachLetter));
+  const pushUsedData = (data) => { //add the used words into usedWords array
+    usedWords.push(data.text);
+    usedAlign.push(data.vertical)
+    data.text.split("").filter((eachLetter) => firstLetters.push(eachLetter));
   };
 
   const isValidPos = (row, column) => { //checks if the row/column is b/w 0 n 9
@@ -188,7 +194,7 @@ const Grid = (props) => {
 
         if(isLetter(row, column)){
           if(updateGrid()){
-            pushUsedWords(word.text);
+            pushUsedData(word);
             return true;
           }
         }
@@ -220,10 +226,11 @@ const Grid = (props) => {
     return intersection;
   };
 /* 1) how come 11 grids?? 
-   2) cal intersecN and Best Grid
-   3) display clues acc to words in best grid - sort them into accross n down
+   2) cal intersecN and Best Grid <done>
+   3) display clues acc to words in best grid - sort them into accross n down <done>
    4) create btn to check the entered values 
    5) function to check the answers
+   6) display slots acc. to the words(use async await)
 */
 
   const getSubIS = (index) => {
@@ -282,7 +289,7 @@ const Grid = (props) => {
         if(getIntersections(index) >= getIntersections(grids.indexOf(bestGrid))){
           bestGrid = grid;
         }
-      }//0 0 0 0 1 0 0 0 1 0 0
+      }
       else{
         if(getSubIS(index) >= getSubIS(grids.indexOf(bestGrid))){
           bestGrid = grid;
@@ -294,8 +301,12 @@ const Grid = (props) => {
     return bestGrid;
   };
 
-  const getUsedWordsArray = (arr) => {
+  const pushUsedWordsArray = (arr) => {
     totalUsedWords.push(arr);
+  };
+
+  const pushUsedAlignArray = (arr) => {
+    totalUsedAlign.push(arr);
   };
 
   const generateGrids = () => {
@@ -314,7 +325,7 @@ const Grid = (props) => {
       word.vertical = false;
       
       updateGrid();
-      pushUsedWords(word.text);
+      pushUsedData(word);
 
       let i = 0;
       for(let attempt=0; attempt<1000; attempt++){
@@ -333,14 +344,17 @@ const Grid = (props) => {
       if(getIntersections(grids.indexOf(grid)) >= 4){
         break;
       }
-      getUsedWordsArray(usedWords);
+      pushUsedWordsArray(usedWords);
+      pushUsedAlignArray(usedAlign);
       usedWords = [];
+      usedAlign = [];
     }
   };
 
   const obtainClues = () => { //get clues acc. to words used in finalGrid
     reqWords = totalUsedWords[grids.indexOf(finalGrid)];
-    //console.log(reqWords);
+    reqAlign = totalUsedAlign[grids.indexOf(finalGrid)];
+
     reqWords.forEach((eachReqWord) =>
       wordSet.forEach((eachWord) => {
         if (eachReqWord === eachWord) {
@@ -352,11 +366,26 @@ const Grid = (props) => {
     index.forEach((eachIndex) =>
       clueSet.forEach((eachClue) => {
         if (eachIndex === clueSet.indexOf(eachClue)) {
-          reqClues.push(`${index.indexOf(eachIndex)+1}. ${eachClue}`);
-          reqClues.push(<br/>);
+          reqClues.push(eachClue);
+          //reqClues.push(<br/>);
         }
       })
     );
+
+      hClues[0]=<h5>ACROSS</h5>;
+      vClues[0]=<h5>DOWN</h5>;
+
+    for(let i=0; i<reqAlign.length; i++){
+      if(reqAlign[i]){
+        vClues.push(`${i+1}. ${reqClues[i]}v`);
+        vClues.push(<br/>);
+      }
+      else{
+        hClues.push(`${i+1}. ${reqClues[i]}h`);
+        hClues.push(<br/>);
+      }
+    }
+
   };
 
   const displayCrossWord = () => {
@@ -371,16 +400,11 @@ const Grid = (props) => {
         ? getIntersections(grids.indexOf(finalGrid))
         : getSubIS(grids.indexOf(finalGrid))
     );*/
-    //console.log(finalGrid);
+    console.log(finalGrid);
     //console.log(totalUsedWords);
     obtainClues();
     displayCrossWord();
   };
-
-  // const wordsNClues = () => {
-  //   word.text = getWord();
-  //   word.vertical = Math.random()>=0.5;
-  // };
 
   const getWord = () => { //get word which is random & has its first letter which is same as atleast one letter of the letters of the usedWords
     let word = getRandomWord();
@@ -392,7 +416,7 @@ const Grid = (props) => {
     return word;
   };
 
-  const hasStartingLetter = (word) => { //
+  const hasStartingLetter = (word) => { //gets a word which has its first letter which is same as atleast one letter of the letters of the usedWords
     let startLetter = false;
     for(let letter of firstLetters){
       if(letter === word.charAt(0)){
@@ -403,7 +427,7 @@ const Grid = (props) => {
     return startLetter;
   };
 
-  const getUnusedWords = () => {
+  const getUnusedWords = () => { //returns the usedWords array 
     return wordSet.filter((eachWord) => !usedWords.includes(eachWord));
   };
 
@@ -417,8 +441,6 @@ const Grid = (props) => {
     wordSet = wordSet.map(eachWord => eachWord.toUpperCase());
     clueSet = props.clues;
     generateCrossWord();
-    //console.log('hiii');
-    //wordsNClues();
   }
 
   const gridSlots = () => {
@@ -427,6 +449,9 @@ const Grid = (props) => {
     let slots = [];
     for (row = 0; row < 10; row++) {
       for (column = 0; column < 10; column++) {
+        // if(isSpecLetter(row, column, grids.indexOf(finalGrid))){
+        //   console.log('confirm');
+        // }
         slots.push(
           <input
             type="text"
@@ -443,7 +468,7 @@ const Grid = (props) => {
     return slots;
   };
 
-  let content = reqClues;
+  let content = [];
   
   if(props.error){
     content = <button type="button" className="btn btn-outline-dark mt-4 tryAgnBtn" onClick={props.onFetch}>
@@ -459,6 +484,8 @@ const Grid = (props) => {
     <>
       <div className="grid">{gridSlots()}</div>
       <div className="clues">{content}</div>
+      <div className="accross">{hClues}</div>
+      <div className="down">{vClues}</div>
     </>
   );
 };

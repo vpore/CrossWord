@@ -19,6 +19,18 @@
     margin-left: 30%;
 }
 
+.accross{
+    margin-left: 10%;
+    width: 40%;
+    float: left;
+}
+
+.down{
+    margin-left: 2%;
+    width: 40%;
+    float: left;
+}
+
 .tryAgnBtn{
     margin-left: 24%;
 }
