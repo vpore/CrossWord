@@ -12,14 +12,21 @@ const Grid = (props) => {
   let reqWords = [];
   let reqAlign = [];
   let reqClues = [];
+  let reqRow = [];
+  let reqColumn = [];
   let hClues = [];
   let vClues = [];
   let usedWords = [];
   let usedAlign = [];
+  let usedRow = [];
+  let usedColumn = [];
   let totalUsedWords = [];
   let totalUsedAlign = [];
+  let totalUsedRow = [];
+  let totalUsedColumn = [];
   let firstLetters = [];
   let index = [];
+  let clueColor = ["", "red", "aqua", "blue", "orange", "green", "magenta", "maroon", "olive", "indigo"];
   let word = {text: '', row: 0, column: 0, vertical: true};
 
   const getSpecWord = () => { //get word of a particular length
@@ -29,7 +36,9 @@ const Grid = (props) => {
 
   const pushUsedData = (data) => { //add the used words into usedWords array
     usedWords.push(data.text);
-    usedAlign.push(data.vertical)
+    usedAlign.push(data.vertical);
+    usedRow.push(data.row);
+    usedColumn.push(data.column);
     data.text.split("").filter((eachLetter) => firstLetters.push(eachLetter));
   };
 
@@ -226,12 +235,14 @@ const Grid = (props) => {
     }
     return intersection;
   };
+
 /* 1) how come 11 grids?? 
    2) cal intersecN and Best Grid <done>
    3) display clues acc to words in best grid - sort them into accross n down <done>
    4) create btn to check the entered values 
    5) function to check the answers
-   6) display slots acc. to the words(use async await)
+   6) display slots acc. to the words(use async await) <done>
+   7) add more words
 */
 
   const getSubIS = (index) => { //returns the no. of 3 letter intersections
@@ -310,9 +321,17 @@ const Grid = (props) => {
     totalUsedAlign.push(arr);
   };
 
+  const pushUsedRowArray = (arr) => {
+    totalUsedRow.push(arr);
+  };
+
+  const pushUsedColumnArray = (arr) => {
+    totalUsedColumn.push(arr);
+  };
+
   const generateGrids = () => { //generates the grids
     grids = [];
-    for(let gridIndex = 0; gridIndex<10; gridIndex++){
+    for(let gridIndex = 0; gridIndex<20; gridIndex++){
       grids[gridIndex] = Array.from(Array(10), () => new Array(10));
       grid = grids[gridIndex];
       for(let row=0; row<10; row++){
@@ -329,7 +348,7 @@ const Grid = (props) => {
       pushUsedData(word);
 
       let i = 0;
-      for(let attempt=0; attempt<500; attempt++){
+      for(let attempt=0; attempt<50; attempt++){
         let placed = attemptToPlaceWord();
         if(placed){
           i=0;
@@ -347,15 +366,25 @@ const Grid = (props) => {
       }
       pushUsedWordsArray(usedWords);
       pushUsedAlignArray(usedAlign);
+      pushUsedRowArray(usedRow);
+      pushUsedColumnArray(usedColumn);
       usedWords = [];
       usedAlign = [];
+      usedRow = [];
+      usedColumn = [];
     }
   };
 
-  const obtainClues = () => { //get clues acc. to words used in finalGrid
-    reqWords = totalUsedWords[grids.indexOf(finalGrid)];
-    reqAlign = totalUsedAlign[grids.indexOf(finalGrid)];
+  const colorCode = (index) => {
+    return <div className="clueColor" style={{backgroundColor: `${clueColor[index]}`}} key={index}></div>
+  };
 
+  const obtainClues = () => { //get clues acc. to words used in finalGrid
+    let pos = grids.indexOf(finalGrid);
+    reqWords = totalUsedWords[pos];
+    reqAlign = totalUsedAlign[pos];
+    reqRow = totalUsedRow[pos];
+    reqColumn = totalUsedColumn[pos];
     reqWords.forEach((eachReqWord) =>
       wordSet.forEach((eachWord) => {
         if (eachReqWord === eachWord) {
@@ -372,21 +401,25 @@ const Grid = (props) => {
       })
     );
 
-      hClues[0]=<h5>ACROSS</h5>;
-      vClues[0]=<h5>DOWN</h5>;
+    hClues[0]=<h5>ACROSS</h5>;
+    vClues[0]=<h5>DOWN</h5>;
 
     for(let i=0; i<reqAlign.length; i++){
       if(reqAlign[i]){
-        vClues.push(`${i+1}. ${reqClues[i]}v`);
+        vClues.push(colorCode(i+1));
+        vClues.push(`${reqClues[i]}`);
         vClues.push(<br/>);
       }
       else{
-        hClues.push(`${i+1}. ${reqClues[i]}h`);
+        hClues.push(colorCode(i+1));
+        hClues.push(`${reqClues[i]}`);
         hClues.push(<br/>);
       }
     }
 
   };
+
+  //const getSpecLetter() 
 
   const displayCrossWord = () => { //puts textfield or black blocks as required
     let row = 0;
@@ -395,16 +428,21 @@ const Grid = (props) => {
     for (row = 0; row < 10; row++) {
       for (column = 0; column < 10; column++) {
         if(isSpecLetter(row, column, grids.indexOf(finalGrid))){
-          crossword.push(
-            <input
-              type="text"
-              className="slot"
-              maxLength={1}
-              style={{ textTransform: "uppercase" }}
-              id={`${row}_${column}`}
-              key={`${row}_${column}`}
-            ></input>
-          );
+          if(row === reqRow && column === reqColumn){
+            //match the indexx
+          }
+          else{
+            crossword.push(
+              <input
+                type="text"
+                className="slot"
+                maxLength={1}
+                style={{ textTransform: "uppercase" }}
+                id={`${row}_${column}`}
+                key={`${row}_${column}`}
+              ></input>
+            );
+          }
         }
         else{
           crossword.push(

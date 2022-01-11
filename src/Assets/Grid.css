@@ -13,7 +13,7 @@
     float: left;
     margin-left: 1%;
     margin-top: 1%;
-    background-color: black;
+    background-color: rgb(255, 255, 255);
 }
 
 .grid{
@@ -44,4 +44,13 @@
 
 .tryAgnBtn{
     margin-left: 24%;
+}
+
+.clueColor{
+    width: 10px;
+    height: 10px;
+    border-radius: 10px;
+    float: left;
+    margin-right: 1%;
+    margin-top: 1%;
 }
