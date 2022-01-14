@@ -26,7 +26,7 @@ const Grid = (props) => {
   let totalUsedColumn = [];
   let firstLetters = [];
   let index = [];
-  let clueColor = ["", "red", "aqua", "blue", "orange", "green", "magenta", "maroon", "olive", "indigo"];
+  let clueColor = ["red", "aqua", "blue", "orange", "green", "magenta", "maroon", "olive", "indigo"];
   let word = {text: '', row: 0, column: 0, vertical: true};
 
   const getSpecWord = () => { //get word of a particular length
@@ -380,11 +380,13 @@ const Grid = (props) => {
   };
 
   const obtainClues = () => { //get clues acc. to words used in finalGrid
+    let j = 0;
     let pos = grids.indexOf(finalGrid);
     reqWords = totalUsedWords[pos];
     reqAlign = totalUsedAlign[pos];
     reqRow = totalUsedRow[pos];
     reqColumn = totalUsedColumn[pos];
+
     reqWords.forEach((eachReqWord) =>
       wordSet.forEach((eachWord) => {
         if (eachReqWord === eachWord) {
@@ -401,18 +403,33 @@ const Grid = (props) => {
       })
     );
 
+    for(let i=1; i<reqRow.length; i++){
+      if(`${reqRow[0]}_${reqColumn[0]}` === `${reqRow[i]}_${reqColumn[i]}`){
+        reqRow.splice(i,1);
+        reqColumn.splice(i,1);
+        j = i;
+      }
+    }
+
     hClues[0]=<h5>ACROSS</h5>;
     vClues[0]=<h5>DOWN</h5>;
 
     for(let i=0; i<reqAlign.length; i++){
       if(reqAlign[i]){
-        vClues.push(colorCode(i+1));
-        vClues.push(`${reqClues[i]}`);
-        vClues.push(<br/>);
+        if(i === j){
+          vClues.push(colorCode(0));
+          vClues.push(reqClues[i]); //reqClues[i+1] hua krta tha lekin kyu?
+          vClues.push(<br/>);
+        }
+        else{
+          vClues.push(colorCode(i));
+          vClues.push(reqClues[i]);
+          vClues.push(<br/>);
+        }
       }
       else{
-        hClues.push(colorCode(i+1));
-        hClues.push(`${reqClues[i]}`);
+        hClues.push(colorCode(i));
+        hClues.push(reqClues[i]);
         hClues.push(<br/>);
       }
     }
@@ -421,28 +438,23 @@ const Grid = (props) => {
 
   //const getSpecLetter() 
 
-  const displayCrossWord = () => { //puts textfield or black blocks as required
+  const displayCrossWord = () => { //puts textfield or white blocks as required
     let row = 0;
     let column = 0;
     crossword = [];
     for (row = 0; row < 10; row++) {
       for (column = 0; column < 10; column++) {
         if(isSpecLetter(row, column, grids.indexOf(finalGrid))){
-          if(row === reqRow && column === reqColumn){
-            //match the indexx
-          }
-          else{
-            crossword.push(
-              <input
-                type="text"
-                className="slot"
-                maxLength={1}
-                style={{ textTransform: "uppercase" }}
-                id={`${row}_${column}`}
-                key={`${row}_${column}`}
-              ></input>
-            );
-          }
+          crossword.push(
+            <input
+              type="text"
+              className="slot"
+              maxLength={1}
+              style={{ textTransform: "uppercase" }}
+              id={`${row}_${column}`}
+              key={`${row}_${column}`}
+            ></input>
+          );
         }
         else{
           crossword.push(
@@ -450,6 +462,23 @@ const Grid = (props) => {
           );
         }
       }
+    }
+
+    for(let i=0; i<reqRow.length; i++){
+      crossword[reqRow[i] * 10 + reqColumn[i]] = (
+        <input
+          type="text"
+          className="slot"
+          maxLength={1}
+          style={{
+            textTransform: "uppercase",
+            backgroundColor: `${clueColor[i]}`,
+            opacity: "80%"
+          }}
+          id={`${row}_${column}`}
+          key={`${row}_${column}`}
+        ></input>
+      );
     }
   };
 
