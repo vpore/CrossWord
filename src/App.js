@@ -15,7 +15,7 @@ function App() {
     setError(null);
     try {
       const response = await fetch(
-        "https://crossworddb-default-rtdb.firebaseio.com/WordData.json"
+        "https://crossword-2-dd693-default-rtdb.firebaseio.com/WordData.json"
       );
 
       if (!response.ok) {
@@ -31,7 +31,6 @@ function App() {
           clue: data[key].clue,
         });
       }
-
       setPairs(loadedData);
     } catch (error) {
       setError(error.message || "Something went Wrong!");
@@ -39,9 +38,9 @@ function App() {
     setIsLoading(false);
   };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
 
   if (pairs.length > 0) {
     var words = pairs.map((eachWord) => eachWord.word);

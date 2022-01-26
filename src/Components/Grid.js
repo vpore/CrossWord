@@ -403,11 +403,13 @@ const Grid = (props) => {
       })
     );
 
-    for(let i=1; i<reqRow.length; i++){
-      if(`${reqRow[0]}_${reqColumn[0]}` === `${reqRow[i]}_${reqColumn[i]}`){
-        reqRow.splice(i,1);
-        reqColumn.splice(i,1);
-        j = i;
+    for(let i=0; i<reqRow.length; i++){
+      for(let k=0; k<reqRow.length; k++){
+        if(`${reqRow[i]}_${reqColumn[i]}` === `${reqRow[k]}_${reqColumn[k]}`){
+          reqRow.splice(i,1);
+          reqColumn.splice(i,1);
+          j = i;
+        }
       }
     }
 
@@ -464,7 +466,7 @@ const Grid = (props) => {
       }
     }
 
-    for(let i=0; i<reqRow.length; i++){
+    /*for(let i=0; i<reqRow.length; i++){
       crossword[reqRow[i] * 10 + reqColumn[i]] = (
         <input
           type="text"
@@ -479,7 +481,7 @@ const Grid = (props) => {
           key={`${row}_${column}`}
         ></input>
       );
-    }
+    }*/
   };
 
   const generateCrossWord = () => { //Main Function

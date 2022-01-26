@@ -1,0 +1,112 @@
+{
+  "WordData" : {
+    "w1" : {
+      "clue" : "Simplified code or technology that’s easy to use without knowing how it works.",
+      "word" : "Abstraction"
+    },
+    "w10" : {
+      "clue" : "A group of templates for building the front end of a website.",
+      "word" : "Bootstrap"
+    },
+    "w11" : {
+      "clue" : "Broken code that causes a program to malfunction.",
+      "word" : "Bug"
+    },
+    "w12" : {
+      "clue" : "A program that changes text-based code into the code a computer understands. The result is an application, often a .exe file. ",
+      "word" : "Compiler"
+    },
+    "w13" : {
+      "clue" : "An event is something that triggers a response in a program. For example, a mouse click or a button press.",
+      "word" : "Event"
+    },
+    "w14" : {
+      "clue" : "Permanent code",
+      "word" : "Hardcode"
+    },
+    "w15" : {
+      "clue" : "Deriving new classes from existing ones",
+      "word" : "Inheritance"
+    },
+    "w16" : {
+      "clue" : "Repetition of a process",
+      "word" : "Iteration"
+    },
+    "w17" : {
+      "clue" : "A common data storage format used in many web apps.",
+      "word" : "JSON"
+    },
+    "w18" : {
+      "clue" : "A database for web applications. ",
+      "word" : "MongoDB"
+    },
+    "w19" : {
+      "clue" : "Empty or without value.",
+      "word" : "NULL"
+    },
+    "w2" : {
+      "clue" : "A method for getting data from a web server that uses XML, JavaScript, and HTML.",
+      "word" : "AJAX"
+    },
+    "w20" : {
+      "clue" : "A member of a class.",
+      "word" : "Objects"
+    },
+    "w21" : {
+      "clue" : "Software that is free for anyone to use.",
+      "word" : "OpenSource"
+    },
+    "w22" : {
+      "clue" : "A scripting language used for websites.",
+      "word" : "PHP"
+    },
+    "w23" : {
+      "clue" : "contains a memory address instead of data.",
+      "word" : "Pointer"
+    },
+    "w24" : {
+      "clue" : "A set of rules that makes it possible for computers to communicate with each other.",
+      "word" : "REST"
+    },
+    "w25" : {
+      "clue" : "A computer that hosts websites and data.",
+      "word" : "Server"
+    },
+    "w26" : {
+      "clue" : "A linear data structure which follows LIFO",
+      "word" : "Stack"
+    },
+    "w27" : {
+      "clue" : "A markup language that looks similar to HTML",
+      "word" : "XML"
+    },
+    "w3" : {
+      "clue" : "A sequence of problem-solving steps.",
+      "word" : "Algorithm"
+    },
+    "w4" : {
+      "clue" : "A JavaScript front end framework for building websites.",
+      "word" : "Angular"
+    },
+    "w5" : {
+      "clue" : "An open-source and free web server software.",
+      "word" : "Apache"
+    },
+    "w6" : {
+      "clue" : "allows interactions between multiple software programs",
+      "word" : "API"
+    },
+    "w7" : {
+      "clue" : "A number, text string, or other value required for a function to run its code.",
+      "word" : "Argument"
+    },
+    "w8" : {
+      "clue" : "a system for electronic communication.",
+      "word" : "ASCII"
+    },
+    "w9" : {
+      "clue" : "It is a feature of a programming language that doesn’t have to do things in the order they are written. Instead, it can do many things at once. What is that FEATURE?",
+      "word" : "Asynchronous"
+    }
+  }
+}
