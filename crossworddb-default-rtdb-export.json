@@ -1,9 +1,5 @@
 {
   "WordData" : {
-    "w1" : {
-      "clue" : "Simplified code or technology that’s easy to use without knowing how it works.",
-      "word" : "Abstraction"
-    },
     "w10" : {
       "clue" : "A group of templates for building the front end of a website.",
       "word" : "Bootstrap"
@@ -23,10 +19,6 @@
     "w14" : {
       "clue" : "Permanent code",
       "word" : "Hardcode"
-    },
-    "w15" : {
-      "clue" : "Deriving new classes from existing ones",
-      "word" : "Inheritance"
     },
     "w16" : {
       "clue" : "Repetition of a process",
@@ -103,10 +95,6 @@
     "w8" : {
       "clue" : "a system for electronic communication.",
       "word" : "ASCII"
-    },
-    "w9" : {
-      "clue" : "It is a feature of a programming language that doesn’t have to do things in the order they are written. Instead, it can do many things at once. What is that FEATURE?",
-      "word" : "Asynchronous"
     }
   }
 }
