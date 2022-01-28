@@ -26,6 +26,7 @@ const Grid = (props) => {
   let totalUsedColumn = [];
   let firstLetters = [];
   let index = [];
+  let repeatingIndex = [];
   let clueColor = ["red", "aqua", "blue", "orange", "green", "magenta", "maroon", "olive", "indigo"];
   let word = {text: '', row: 0, column: 0, vertical: true};
 
@@ -380,12 +381,15 @@ const Grid = (props) => {
   };
 
   const obtainClues = () => { //get clues acc. to words used in finalGrid
-    let j = 0;
+    let j = 1;
     let pos = grids.indexOf(finalGrid);
     reqWords = totalUsedWords[pos];
     reqAlign = totalUsedAlign[pos];
     reqRow = totalUsedRow[pos];
     reqColumn = totalUsedColumn[pos];
+    console.log(reqRow);
+    console.log(reqColumn);
+    console.log(finalGrid[0][0])
 
     reqWords.forEach((eachReqWord) =>
       wordSet.forEach((eachWord) => {
@@ -403,12 +407,23 @@ const Grid = (props) => {
       })
     );
 
-    for(let i=0; i<reqRow.length; i++){
+    /*for(let i=0; i<reqRow.length; i++){
       for(let k=0; k<reqRow.length; k++){
         if(`${reqRow[i]}_${reqColumn[i]}` === `${reqRow[k]}_${reqColumn[k]}`){
+          console.log(`${reqRow[i]}_${reqColumn[i]}: i=${i}`);
+          console.log(`${reqRow[k]}_${reqColumn[k]}: k=${k}`);
           reqRow.splice(i,1);
           reqColumn.splice(i,1);
           j = i;
+        }
+      }
+    }*/
+
+    for(let i=0; i<reqRow.length; i++){
+      for(let k=i+1; k<reqRow.length; k++){
+        if(`${reqRow[i]}_${reqColumn[i]}` === `${reqRow[k]}_${reqColumn[k]}`){
+          repeatingIndex.push(i);
+          repeatingIndex.push(k);
         }
       }
     }
@@ -418,10 +433,11 @@ const Grid = (props) => {
 
     for(let i=0; i<reqAlign.length; i++){
       if(reqAlign[i]){
-        if(i === j){
-          vClues.push(colorCode(0));
-          vClues.push(reqClues[i]); //reqClues[i+1] hua krta tha lekin kyu?
+        if(repeatingIndex[j] === i){
+          vClues.push(colorCode(repeatingIndex[j-1]));
+          vClues.push(reqClues[i]);
           vClues.push(<br/>);
+          j=j+2;
         }
         else{
           vClues.push(colorCode(i));
@@ -430,11 +446,19 @@ const Grid = (props) => {
         }
       }
       else{
-        hClues.push(colorCode(i));
-        hClues.push(reqClues[i]);
-        hClues.push(<br/>);
+        if(repeatingIndex[j] === i){
+          hClues.push(colorCode(repeatingIndex[j-1]));
+          hClues.push(reqClues[i]);
+          hClues.push(<br/>);
+          j=j+2;
+        }
+        else{
+          hClues.push(colorCode(i));
+          hClues.push(reqClues[i]);
+          hClues.push(<br/>);
+        }
       }
-    }
+    }    
 
   };
 
@@ -455,6 +479,7 @@ const Grid = (props) => {
               style={{ textTransform: "uppercase" }}
               id={`${row}_${column}`}
               key={`${row}_${column}`}
+              value={finalGrid[row][column]}
             ></input>
           );
         }
@@ -465,23 +490,25 @@ const Grid = (props) => {
         }
       }
     }
-
-    /*for(let i=0; i<reqRow.length; i++){
-      crossword[reqRow[i] * 10 + reqColumn[i]] = (
-        <input
-          type="text"
-          className="slot"
-          maxLength={1}
-          style={{
-            textTransform: "uppercase",
-            backgroundColor: `${clueColor[i]}`,
-            opacity: "80%"
-          }}
-          id={`${row}_${column}`}
-          key={`${row}_${column}`}
-        ></input>
-      );
-    }*/
+    let j=1;
+    for(let i=0; i<reqRow.length; i++){
+      if(repeatingIndex[j] !== i){
+        crossword[reqRow[i] * 10 + reqColumn[i]] = (
+          <input
+            type="text"
+            className="slot"
+            maxLength={1}
+            style={{
+              textTransform: "uppercase",
+              backgroundColor: `${clueColor[i]}`,
+              opacity: "80%"
+            }}
+            id={`${row}_${column}`}
+            key={`${row}_${column}`}
+          ></input>
+        );
+      }
+    }
   };
 
   const generateCrossWord = () => { //Main Function
