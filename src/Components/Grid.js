@@ -387,9 +387,10 @@ const Grid = (props) => {
     reqAlign = totalUsedAlign[pos];
     reqRow = totalUsedRow[pos];
     reqColumn = totalUsedColumn[pos];
-    console.log(reqRow);
+    
+    /*console.log(reqRow);
     console.log(reqColumn);
-    console.log(finalGrid[0][0])
+    console.log(finalGrid[0][0])*/
 
     reqWords.forEach((eachReqWord) =>
       wordSet.forEach((eachWord) => {
