@@ -1,4 +1,6 @@
 import "../Assets/Grid.css";
+import CheckBtn from "./CheckBtn";
+
 const Grid = (props) => {
 
   let crossword = [];
@@ -480,13 +482,12 @@ const Grid = (props) => {
               style={{ textTransform: "uppercase" }}
               id={`${row}_${column}`}
               key={`${row}_${column}`}
-              value={finalGrid[row][column]}
             ></input>
           );
         }
         else{
           crossword.push(
-            <div className="block"></div>
+            <div className="block" id={`${row}_${column}`}></div>
           );
         }
       }
@@ -504,8 +505,8 @@ const Grid = (props) => {
               backgroundColor: `${clueColor[i]}`,
               opacity: "80%"
             }}
-            id={`${row}_${column}`}
-            key={`${row}_${column}`}
+            id={`${reqRow[i]}_${reqColumn[i]}`}
+            key={`${reqRow[i]}_${reqColumn[i]}`}
           ></input>
         );
       }
@@ -549,6 +550,38 @@ const Grid = (props) => {
     return unusedWords[Math.floor(Math.random() * unusedWords.length)];
   };
 
+  let answerGrid = Array.from(Array(10), () => new Array(10));
+  const checkAnswers = () => {
+    for(let row = 0; row<10; row++){
+      for(let column = 0; column<10; column++){
+        if(typeof document.getElementById(`${row}_${column}`).value !== 'undefined'){
+          answerGrid[row][column] = document.getElementById(`${row}_${column}`).value.toUpperCase();
+        }
+        else{
+          answerGrid[row][column] = '_';
+        }
+      }
+    }
+    var points = 0;
+    for(let row = 0; row<10; row++){
+      for(let column = 0; column<10; column++){
+        if(finalGrid[row][column] === '_'){continue;}
+        if(finalGrid[row][column] === answerGrid[row][column])
+        ++points;
+      }
+    }
+    console.log(answerGrid);
+    alert(`Your score is ${points}!!`);
+  };
+
+  document.addEventListener('keydown', changeFocus);
+  function changeFocus(event){
+    if(event.code === 'ArrowRight'){
+      alert('right');
+    }
+    //change input fields' focus
+  }
+
   if (typeof props.words !== 'undefined') {
     wordSet = props.words;
     wordSet = wordSet.map(eachWord => eachWord.toUpperCase());
@@ -570,6 +603,7 @@ const Grid = (props) => {
 
   return (
     <>
+      <CheckBtn onCheck={checkAnswers}/>
       <div className="grid">{crossword}</div>
       <div className="accross">{hClues}</div>
       <div className="down">{vClues}</div>

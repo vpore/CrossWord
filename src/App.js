@@ -1,6 +1,5 @@
 import "./App.css";
 import Header from "./Components/Header";
-import CheckBtn from "./Components/CheckBtn";
 import Button from "./Components/Button";
 import Grid from "./Components/Grid";
 import { useEffect, useState } from "react";
@@ -53,7 +52,6 @@ function App() {
     <>
       <Header />
       <Button onFetch={fetchData} />
-      <CheckBtn/>
       <Grid
         pairs={pairs}
         words={words}
