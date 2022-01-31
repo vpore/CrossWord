@@ -29,14 +29,14 @@
 }
 
 .accross{
-    margin-top: 2%;
+    margin-top: 23%;
     margin-left: 10%;
     width: 40%;
     float: left;
 }
 
 .down{
-    margin-top: 2%;
+    margin-top: 23%;
     margin-left: 2%;
     width: 40%;
     float: left;
@@ -53,4 +53,12 @@
     float: left;
     margin-right: 1%;
     margin-top: 1%;
+}
+
+.info{
+    margin-left: 65%;
+}
+
+.genBtn{
+    color: black;
 }

@@ -1,10 +1,16 @@
 import "./App.css";
 import Header from "./Components/Header";
-import Button from "./Components/Button";
+import GenerateBtn from "./Components/GenerateBtn";
 import Grid from "./Components/Grid";
 import { useEffect, useState } from "react";
+import { useTheme, ThemeProvider, createTheme } from '@mui/material/styles';
 
 function App() {
+  const darkTheme = createTheme({
+    palette: {
+      mode: 'dark',
+    },
+  });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [pairs, setPairs] = useState([]);
@@ -51,7 +57,7 @@ function App() {
   return (
     <>
       <Header />
-      <Button onFetch={fetchData} />
+      <GenerateBtn onFetch={fetchData} />
       <Grid
         pairs={pairs}
         words={words}

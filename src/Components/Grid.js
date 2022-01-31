@@ -1,5 +1,7 @@
 import "../Assets/Grid.css";
 import CheckBtn from "./CheckBtn";
+import Info from "./Info";
+import AlertBox from "./AlertBox";
 
 const Grid = (props) => {
 
@@ -574,6 +576,7 @@ const Grid = (props) => {
   };
 
   let answerGrid = Array.from(Array(10), () => new Array(10));
+  var Score;
   const checkAnswers = () => {
     for(let row = 0; row<10; row++){
       for(let column = 0; column<10; column++){
@@ -595,7 +598,9 @@ const Grid = (props) => {
         ++points;
       }
     }
-    alert(`Your score is ${Math.round(points/totalPoints*100)}!!`);
+    Score = Math.round(points/totalPoints*100);
+    return Score;
+    //alert(`Your score is ${Math.round(points/totalPoints*100)}!!`);
   };
 
   if (typeof props.words !== 'undefined') {
@@ -619,8 +624,10 @@ const Grid = (props) => {
 
   return (
     <>
-      <CheckBtn onCheck={checkAnswers}/>
-      <div className="grid">{crossword}</div>
+      <AlertBox onCheck={checkAnswers}/>
+      {/* <CheckBtn onCheck={checkAnswers}/> */}
+      <div className="grid position-absolute">{crossword}</div>
+      <Info />
       <div className="accross">{hClues}</div>
       <div className="down">{vClues}</div>
     </>
