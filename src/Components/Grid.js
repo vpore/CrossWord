@@ -465,6 +465,25 @@ const Grid = (props) => {
 
   };
 
+  function changeFocus(event){
+    let gridId = document.activeElement.id;
+    let row = parseInt(gridId.substring(0,1));
+    let column = parseInt(gridId.substring(2));
+    if(event.code === 'ArrowRight'){
+      document.getElementById(`${row}_${column+1}`).focus();
+    }
+    if(event.code === 'ArrowLeft'){
+      document.getElementById(`${row}_${column-1}`).focus();
+    }
+    if(event.code === 'ArrowUp'){
+      document.getElementById(`${row-1}_${column}`).focus();
+    }
+    if(event.code === 'ArrowDown'){
+      document.getElementById(`${row+1}_${column}`).focus();
+    }
+    //change input fields' focus
+  }
+
   //const getSpecLetter() 
 
   const displayCrossWord = () => { //puts textfield or white blocks as required
@@ -482,6 +501,8 @@ const Grid = (props) => {
               style={{ textTransform: "uppercase" }}
               id={`${row}_${column}`}
               key={`${row}_${column}`}
+              onKeyDown={changeFocus}
+              autoComplete="off"
             ></input>
           );
         }
@@ -507,6 +528,8 @@ const Grid = (props) => {
             }}
             id={`${reqRow[i]}_${reqColumn[i]}`}
             key={`${reqRow[i]}_${reqColumn[i]}`}
+            onKeyDown={changeFocus}
+            autoComplete="off"
           ></input>
         );
       }
@@ -563,24 +586,17 @@ const Grid = (props) => {
       }
     }
     var points = 0;
+    var totalPoints = 0;
     for(let row = 0; row<10; row++){
       for(let column = 0; column<10; column++){
         if(finalGrid[row][column] === '_'){continue;}
+        else{++totalPoints;}
         if(finalGrid[row][column] === answerGrid[row][column])
         ++points;
       }
     }
-    console.log(answerGrid);
-    alert(`Your score is ${points}!!`);
+    alert(`Your score is ${Math.round(points/totalPoints*100)}!!`);
   };
-
-  document.addEventListener('keydown', changeFocus);
-  function changeFocus(event){
-    if(event.code === 'ArrowRight'){
-      alert('right');
-    }
-    //change input fields' focus
-  }
 
   if (typeof props.words !== 'undefined') {
     wordSet = props.words;
