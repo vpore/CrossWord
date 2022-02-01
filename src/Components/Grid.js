@@ -1,7 +1,7 @@
 import "../Assets/Grid.css";
-import CheckBtn from "./CheckBtn";
 import Info from "./Info";
-import AlertBox from "./AlertBox";
+import ScoreBox from "./ScoreBox";
+import imgSrc from '../Assets/image.svg';
 
 const Grid = (props) => {
 
@@ -575,34 +575,6 @@ const Grid = (props) => {
     return unusedWords[Math.floor(Math.random() * unusedWords.length)];
   };
 
-  let answerGrid = Array.from(Array(10), () => new Array(10));
-  var Score;
-  const checkAnswers = () => {
-    for(let row = 0; row<10; row++){
-      for(let column = 0; column<10; column++){
-        if(typeof document.getElementById(`${row}_${column}`).value !== 'undefined'){
-          answerGrid[row][column] = document.getElementById(`${row}_${column}`).value.toUpperCase();
-        }
-        else{
-          answerGrid[row][column] = '_';
-        }
-      }
-    }
-    var points = 0;
-    var totalPoints = 0;
-    for(let row = 0; row<10; row++){
-      for(let column = 0; column<10; column++){
-        if(finalGrid[row][column] === '_'){continue;}
-        else{++totalPoints;}
-        if(finalGrid[row][column] === answerGrid[row][column])
-        ++points;
-      }
-    }
-    Score = Math.round(points/totalPoints*100);
-    return Score;
-    //alert(`Your score is ${Math.round(points/totalPoints*100)}!!`);
-  };
-
   if (typeof props.words !== 'undefined') {
     wordSet = props.words;
     wordSet = wordSet.map(eachWord => eachWord.toUpperCase());
@@ -624,7 +596,8 @@ const Grid = (props) => {
 
   return (
     <>
-      <AlertBox onCheck={checkAnswers}/>
+      <ScoreBox answer={finalGrid}/>
+      <img src={imgSrc} className="hello" id="helloImg"/>
       {/* <CheckBtn onCheck={checkAnswers}/> */}
       <div className="grid position-absolute">{crossword}</div>
       <Info />

@@ -57,8 +57,16 @@
 
 .info{
     margin-left: 65%;
+    display: none;
 }
 
 .genBtn{
     color: black;
+}
+
+.hello{
+    width: 500px;
+    height: 500px;
+    margin-left: 33%;
+    margin-top: 3%;
 }

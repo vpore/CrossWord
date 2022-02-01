@@ -42,6 +42,8 @@ function App() {
       setError(error.message || "Something went Wrong!");
     }
     setIsLoading(false);
+    document.getElementById('helloImg').style.display='none';
+    document.getElementById('info').style.display = 'block';
   };
 
   // useEffect(() => {
