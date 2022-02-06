@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/crossword/static/css/main.9ecd1400.css",
-    "main.js": "/crossword/static/js/main.6bc24550.js",
-    "static/js/787.4a40c55a.chunk.js": "/crossword/static/js/787.4a40c55a.chunk.js",
-    "static/media/image.svg": "/crossword/static/media/image.fa26ae215e20d368611aabc4e2751c9c.svg",
-    "index.html": "/crossword/index.html",
-    "main.9ecd1400.css.map": "/crossword/static/css/main.9ecd1400.css.map",
-    "main.6bc24550.js.map": "/crossword/static/js/main.6bc24550.js.map",
-    "787.4a40c55a.chunk.js.map": "/crossword/static/js/787.4a40c55a.chunk.js.map"
+    "main.css": "/CrossWord/static/css/main.9ecd1400.css",
+    "main.js": "/CrossWord/static/js/main.26802e80.js",
+    "static/js/787.4a40c55a.chunk.js": "/CrossWord/static/js/787.4a40c55a.chunk.js",
+    "static/media/image.svg": "/CrossWord/static/media/image.fa26ae215e20d368611aabc4e2751c9c.svg",
+    "index.html": "/CrossWord/index.html",
+    "main.9ecd1400.css.map": "/CrossWord/static/css/main.9ecd1400.css.map",
+    "main.26802e80.js.map": "/CrossWord/static/js/main.26802e80.js.map",
+    "787.4a40c55a.chunk.js.map": "/CrossWord/static/js/787.4a40c55a.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.9ecd1400.css",
-    "static/js/main.6bc24550.js"
+    "static/js/main.26802e80.js"
   ]
 }
