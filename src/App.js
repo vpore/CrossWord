@@ -21,7 +21,7 @@ function App() {
     setError(null);
     try {
       const response = await fetch(
-        "https://crossword-2-dd693-default-rtdb.firebaseio.com/WordData.json"
+        "https://crossword-03-default-rtdb.firebaseio.com/WordData.json"
       );
 
       if (!response.ok) {
