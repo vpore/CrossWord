@@ -555,7 +555,7 @@ const Grid = (props) => {
     return word;
   };
 
-  const hasStartingLetter = (word) => { //gets a word which has its first letter which is same as atleast one letter of the letters of the usedWords
+  const hasStartingLetter = (word) => { //gets a word that has its first letter which is same as atleast one letter of the letters of the usedWords
     let startLetter = false;
     for(let letter of firstLetters){
       if(letter === word.charAt(0)){
@@ -570,7 +570,7 @@ const Grid = (props) => {
     return wordSet.filter((eachWord) => !usedWords.includes(eachWord));
   };
 
-  const getRandomWord = () => { //returns a random word from unusedWords array
+  const getRandomWord = () => { //returns a random word from unUsedWords array
     let unusedWords = getUnusedWords();
     return unusedWords[Math.floor(Math.random() * unusedWords.length)];
   };

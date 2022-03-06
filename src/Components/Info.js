@@ -7,6 +7,7 @@ const Info = () => {
             <ol>
                 <li>The answer of a clue starts from the block of the same colour<br/>which is there at the beginning of the clue.</li>
                 <li>You can move accross the grid blocks using arrow keys.</li>
+                <li>You can generate as many CrossWords as you want!</li>
             </ol>
         </div>
         </>
